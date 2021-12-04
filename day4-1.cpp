@@ -2,7 +2,6 @@
 using namespace std;
 
 struct Board {
-    vector<vector<int>> b;
     vector<int> rows, cols;
     std::unordered_map<int,pair<int,int>> idx;
     int sum;
@@ -11,16 +10,14 @@ struct Board {
         cols.resize(5,5);
     }
     bool read(istream& is) {
-        int r = 0;
+        int r = 0, num;
         bool ok = true;
         while (ok && r < 5) {
-            vector<int> row(5);
             for (int c = 0; ok && c < 5; ++c) {
-                if (!(cin >> row[c])) ok = false;
-                idx[row[c]] = {r, c};
-                sum += row[c];
+                if (!(cin >> num)) ok = false;
+                idx[num] = {r, c};
+                sum += num;
             }
-            if (ok) b.push_back(row);
             ++r;
         }
         return ok;
