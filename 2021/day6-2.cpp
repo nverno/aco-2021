@@ -1,3 +1,4 @@
+// -*- compile-command: "make d6"; -*-
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
