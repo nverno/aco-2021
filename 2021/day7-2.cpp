@@ -19,16 +19,12 @@ int main(int argc, char *argv[]) {
         return acc;
     };
 
-    int r = INT_MIN, l = INT_MAX;
-    for (auto& x : arr) {
-        r = max(x, r);
-        l = min(x, l);
-    }
-
+    auto [lp, rp] = minmax_element(arr.begin(), arr.end());
+    int l = *lp, r = *rp;
     while (l < r) {
         int mid = (l + r + 1) / 2,
               v = score(mid),
-             vr = (mid < arr.size() - 1) ? score(mid+1) : INT_MAX;
+             vr = (mid < (int)arr.size() - 1) ? score(mid+1) : INT_MAX;
         if (vr < v) l = mid + 1;
         else r = mid;
     }
