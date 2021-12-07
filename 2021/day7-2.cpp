@@ -3,27 +3,35 @@
 #include "../lib/aoc.hpp"
 using namespace std;
 
+// O(nlog(n)) binary search
 int main(int argc, char *argv[]) {
     string line;
     getline(cin, line);
     vector<int> arr;
     split(line, arr, ',');
 
-    int mx = INT_MIN, mn = INT_MAX;
+    auto score = [&](int mid) {
+        int acc = 0;
+        for (auto& x : arr) {
+            int d = abs(x - mid);
+            acc += d*(d+1)/2;
+        }
+        return acc;
+    };
+
+    int r = INT_MIN, l = INT_MAX;
     for (auto& x : arr) {
-        mx = max(x, mx);
-        mn = min(x, mn);
+        r = max(x, r);
+        l = min(x, l);
     }
 
-    int res = INT_MAX;
-    for (int pos = mn; pos <= mx; ++pos) {
-        int cur = 0;
-        for (auto& x : arr) {
-            int d = abs(x - pos);
-            cur += d*(d+1) / 2;
-        }
-        res = min(res, cur);
+    while (l < r) {
+        int mid = (l + r + 1) / 2,
+              v = score(mid),
+             vr = (mid < arr.size() - 1) ? score(mid+1) : INT_MAX;
+        if (vr < v) l = mid + 1;
+        else r = mid;
     }
-    cout << res << endl;
+    cout << score(l) << endl;
     return 0;
 }
