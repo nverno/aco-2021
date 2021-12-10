@@ -19,14 +19,14 @@ export
 all:
 	echo $(OBJS)
 
-%.out: %.cpp ${LIB}
+%.out: %.o ${LIB}
 	$(CC) ${CXXFLAGS} ${LIB} $< -o $@
 
 %.o: %.cpp
 	$(CC) -c $< ${CXXFLAGS}
 
 day%: day%.cpp
-	make day$*.o day$*.out
+	@make day$*.o day$*.out
 
 r-%-1: day%-1.out
 	./$^ < $(INPUT)/day$*.txt
