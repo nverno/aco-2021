@@ -2,3 +2,4 @@
 *.out
 tmp*
 *.tmp
+*.o
