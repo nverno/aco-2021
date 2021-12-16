@@ -2,7 +2,7 @@ ROOTDIR = $(CURDIR)/..
 
 CC = g++
 CPPINCLUDE = -I${ROOTDIR}/lib
-CXXFLAGS += -Wall -Wshadow -fsanitize=address -fsanitize=undefined -O2 -g -std=c++17 ${CPPINCLUDE}
+CXXFLAGS += -Wall -Wshadow -fsanitize=undefined -O2 -g -std=c++17 ${CPPINCLUDE}
 
 LSRC = $(ROOTDIR)/lib/aoc.cpp
 CSRC = $(wildcard *.cpp)
@@ -22,10 +22,10 @@ all:
 %.out: %.o ${LIB}
 	$(CC) ${CXXFLAGS} ${LIB} $< -o $@
 
-%.o: %.cpp
+%.o: %.cpp ${LIB}
 	$(CC) -c $< ${CXXFLAGS}
 
-day%: day%.cpp
+day%: day%.cpp ${LIB}
 	@make day$*.o day$*.out
 
 r-%-1: day%-1.out
