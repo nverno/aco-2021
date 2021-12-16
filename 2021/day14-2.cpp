@@ -18,27 +18,25 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    std::unordered_map<string,ll> cnt, tmp, res;
-    for (int i = 0; i < seq.size()-1; ++i)
-        cnt[s.substr(i, 2)]++;
+    vector<ll> cnt(26);
+    for (size_t i = 0; i < seq.size(); ++i) cnt[seq[i]-'A']++;
+
+    std::unordered_map<string,ll> cur, nxt;
+    for (size_t i = 0; i < seq.size()-1; ++i)
+        cur[seq.substr(i, 2)]++;
 
     for (int step = 1; step <= 40; ++step) {
-        tmp.clear();
-        for (auto& [k, v] : cnt) {
-            
+        nxt.clear();
+        for (auto& [k, v] : cur) {
+            auto [a, b] = m[k];
+            cnt[a[1]-'A'] += v;
+            nxt[a] += v;
+            nxt[b] += v;
         }
-        for (size_t i = 0; i < seq.size(); ++i) {
-            res += seq[i];
-            auto node = t->lookup(seq.substr(i, 2));
-            if (node) res += node->val;
-        }
-        // cout << "After step " << step << ": " << res << endl;
-        swap(res, seq);
+        swap(cur, nxt);
     }
-
-    vector<ll> cnt(26);
-    for (auto& c : seq) cnt[c-'A']++;
-    ll mx = INT_MIN, mn = INT_MAX;
+    
+    ll mx = LLONG_MIN, mn = LLONG_MAX;
     for (auto& x : cnt) {
         if (x == 0) continue;
         mx = max(mx, x);
