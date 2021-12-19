@@ -32,6 +32,7 @@ void split(std::string& s, std::vector<int>& res, std::string delim) {
         res.push_back(stoi(cur));
         s.erase(0, pos + delim.size());
     }
+    if (s.size()) res.push_back(stoi(s));
 }
 
 void split(std::string& s, std::vector<std::string>& res, std::string delim) {
