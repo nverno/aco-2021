@@ -4,6 +4,9 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <stack>
+
+#include "tree.hpp"
 
 extern std::string trim(std::string&);
 extern void split(std::string&, std::vector<std::string>&, char c = ' ');

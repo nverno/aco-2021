@@ -5,9 +5,9 @@
 using namespace std;
 using Tree = Node<int>;
 
-// [[[a,b]].[d,e]...]
+// [[[a,b]],[d,e]...]
 Tree *treeFromList(std::string& line) {
-    Tree *prev = nullptr, *res = nullptr;
+    Tree *res = nullptr;
     std::stack<Tree*> st;
     for (size_t i = 0; i < line.size(); ++i) {
         if (line[i] == ',') continue;
@@ -18,17 +18,37 @@ Tree *treeFromList(std::string& line) {
         else if (line[i] == ']') res = st.top(), st.pop();
         else {
             assert(isdigit(line[i]));
-            Tree *nxt = st.top()->append(line[i]-'0');
-            nxt->left = prev;
-            if (prev) prev->right = nxt;
-            prev = nxt;
+            st.top()->append(line[i]-'0');
         }
     }
     return res;
 }
 
+Tree *link(Tree *t, Tree *prev) {
+    if (t->leaf) {
+        t->left = prev;
+        if (prev) prev->right = t;
+        return t;
+    }
+    Tree *l = link(t->left, prev);
+    return link(t->right, l);
+}
+
+Tree *getHead(Tree *t) {
+    while (t && t->left) t = t->left;
+    return t;
+}
+
+Tree *join(Tree *l, Tree *r) {
+    Tree *res = new Tree(nullptr, l, r);
+    l->parent = r->parent = res;
+    res->updateDepth();
+    link(res, nullptr);
+    return res;
+}
+
 Tree *explode(Tree *t) {
-    assert(t->leaf && t->depth >= 4);
+    assert(t && t->leaf && t->depth >= 4);
     auto [l, r] = t->getPair();
     assert(l->leaf && r->leaf);
     if (l->left) l->left->val += l->val;
@@ -45,7 +65,7 @@ Tree *explode(Tree *t) {
 }
 
 Tree *split(Tree *t) {
-    assert(t->leaf && t->val >= 10);
+    assert(t && t->leaf && t->val >= 10);
     Tree *l = t->left, *r = t->right;
     t->left = new Tree(t->val/2, t, l);
     t->right = new Tree((1+t->val)/2, t, t->left, r);
@@ -56,43 +76,28 @@ Tree *split(Tree *t) {
     return t->left;
 }
 
-Tree *reduce(Tree *hd) {
-    Tree *ptr = hd;
+Tree *reduce(Tree *t) {
+    Tree *ptr = getHead(t);
     while (ptr) {
-        if (ptr->depth > 4) {
-            Tree *nxt = explode(ptr);
-            assert(nxt);
-            if (ptr == hd) hd = nxt;
-            ptr = nxt;
-        } else ptr = ptr->right;
+        assert(ptr->leaf);
+        if (ptr->depth > 4) ptr = explode(ptr);
+        else ptr = ptr->right;
     }
-    ptr = hd;
+    ptr = getHead(t);
     while (ptr) {
+        assert(ptr->leaf);
         if (ptr->val >= 10) {
-            Tree *nxt = split(ptr);
-            if (ptr == hd) hd = nxt;
-            return reduce(hd);
+            split(ptr);
+            return reduce(t);
         } else ptr = ptr->right;
     }
-    return hd;
-}
-
-Tree *join(Tree *l, Tree *hd, Tree *r) {
-    Tree *res = new Tree(nullptr, l, r);
-    l->parent = r->parent = res;
-    res->updateDepth();
-    while (hd && hd->right) hd = hd->right;
-    Tree *rhd = r;
-    while (rhd && rhd->left) rhd = rhd->left;
-    rhd->left = hd;
-    hd->right = rhd;
-    return res;
+    return t;
 }
 
 void printList(Tree *hd) {
     cout << "list: ";
     while (hd && hd->right) {
-        cout << hd->val << ",";
+        cout << hd->val << "(" << hd->depth << ")" << ",";
         hd = hd->right;
     }
     cout << hd->val << endl;
@@ -103,23 +108,25 @@ int magnitude(Tree *t) {
     if (t->leaf) return t->val;
     return 3*magnitude(t->left) + 2*magnitude(t->right);
 }
+int add(Tree *l, Tree *r) {
+    Tree *t = join(l->clone(), r->clone());
+    int res = magnitude(reduce(t));
+    free(t);
+    return res;
+}
 
 int main(int argc, char *argv[]) {
+    vector<Tree*> trees;
     string line;
-    getline(cin, line);
-    Tree *tree = treeFromList(line), *hd = tree;
-    while (hd && hd->left) hd = hd->left;
-
-    while (getline(cin, line)) {
-        Tree *nxt = treeFromList(line);
-        cout << tree << endl;
-        cout << "+ " << nxt << "\n= ";
-        tree = join(tree, hd, nxt);
-        hd = reduce(hd);
-        cout << tree << endl;
+    while (getline(cin, line))
+        trees.push_back(treeFromList(line));
+    
+    int res = 0;
+    for (size_t i = 0; i < trees.size(); ++i) {
+        for (size_t j = i+1; j < trees.size(); ++j) {
+            res = max({ res, add(trees[i], trees[j]), add(trees[j], trees[i]) });
+        }
     }
-
-    cout << tree << endl;
-    cout << magnitude(tree) << endl;
+    cout << res << endl;
     return 0;
 }
