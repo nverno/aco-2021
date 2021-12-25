@@ -5,8 +5,10 @@
 #include <vector>
 #include <unordered_map>
 #include <stack>
+#include <tuple>
 
 #include "tree.hpp"
+#include "point.hpp"
 
 extern std::string trim(std::string&);
 extern void split(std::string&, std::vector<std::string>&, char c = ' ');
