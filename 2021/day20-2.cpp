@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     assert(algo.size() == 512);
     
     vector<string> img;
-    int rounds = 2, npad = rounds+1;
+    int rounds = 50, npad = rounds+1;
     string line, blank, pad = string(npad, '.');
     while (getline(cin, line)) {
         if (line.empty()) continue;
