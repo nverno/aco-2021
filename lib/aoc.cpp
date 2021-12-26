@@ -70,3 +70,15 @@ std::string hex2bin(std::string& s) {
     for (char const &c: s) bits += m[std::toupper(c)];
     return bits;
 }
+
+bool matches(std::string& line, std::vector<string>& res, std::string re) {
+    res.clear();
+    std::regex r(re);
+    std::smatch sm;
+    while (std::regex_search(line, sm, r)) {
+        res.push_back(sm.str());
+        line = sm.suffix();
+        return true;
+    }
+    return false;
+}

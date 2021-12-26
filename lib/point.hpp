@@ -1,5 +1,9 @@
 #pragma once
-#include "aoc.hpp"
+#include <vector>
+#include <string>
+#include <tuple>
+#include <ostream>
+
 extern void split(std::string&, std::vector<int>&, char c);
 
 struct Point3D {

@@ -1,6 +1,7 @@
 // -*- compile-command: "make d19" -*-
 #include <bits/stdc++.h>
 #include "../lib/aoc.hpp"
+#include "../lib/point.hpp"
 using namespace std;
 using Point = Point3D;
 
