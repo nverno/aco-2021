@@ -4,7 +4,7 @@
 using namespace std;
 
 const array<int,4> moveCost = { 1, 10, 100, 1000 };
-const int hallSz = 11, roomSz = 2;
+const int hallSz = 11, roomSz = 4;
 const vector<int> roomLocs = {2, 4, 6, 8};
 enum { EMPTY=-2, DOOR=-1, A=0, B, C, D };
 
