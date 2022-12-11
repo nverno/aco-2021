@@ -1,4 +1,5 @@
 ROOTDIR = $(CURDIR)/..
+-include config.mk
 
 CC = g++
 CPPINCLUDE = -I${ROOTDIR}/lib
@@ -14,16 +15,29 @@ DAYS = $(wildcard *.cpp)
 
 RUN = ./$(1) < $(INPUT)/day$(2).txt
 BUILD = $(CC) ${CXXFLAGS} -o $(1) $(2) ${SRC}
+
+ADVENT = https://adventofcode.com
+SESSION := $(shell cat $(CURDIR)/session)
+CURL = curl -H "Cookie: session=$(SESSION)"
 export
 
 all:
-	echo $(OBJS)
+	@echo $(YEAR): $(OBJS)
 
 %.out: %.o ${LIB}
 	$(CC) ${CXXFLAGS} ${LIB} $< -o $@
 
 %.o: %.cpp ${LIB}
 	$(CC) -c $< ${CXXFLAGS}
+
+in%: $(INPUT)/day%.txt
+	@make $(INPUT)/day$*.txt
+
+$(INPUT)/day%.txt:
+	$(CURL) -Lo $@ $(ADVENT)/$(YEAR)/day/$*/input
+
+submit%-1:
+	$(CURL) -F answer=$(ANSWER1) -F level=1 $(ADVENT)/$(YEAR)/day/$*/answer
 
 day%: day%.cpp ${LIB}
 	@make day$*.o day$*.out
@@ -51,6 +65,7 @@ t%:
 	@make -s TESTTMP=$(INPUT)/tmp.txt d$*
 
 d%:
+	@make $(INPUT)/day$*.txt
 	@if [ -f "day$*-1.cpp" ]; then                                    \
 		make day$*-1 >/dev/null;                                  \
 		echo -n "part 1: ";                                       \
