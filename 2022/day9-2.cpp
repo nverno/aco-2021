@@ -6,34 +6,46 @@ using namespace std;
 const int SZ = 10;
 const int TL = 9;
 
+struct point {
+    int x, y;
+    point(): x(0), y(0) {}
+    point(int xx, int yy): x(xx), y(yy) {}
+    point& operator+=(const point& o) { x += o.x; y += o.y; return *this; }
+    point& operator-=(const point& o) { x -= o.x; y -= o.y; return *this; }
+    point& operator=(const point& o) { x = o.x; y = o.y; return *this; }
+};
+ostream& operator<<(ostream& os, const point& p) { return os << p.x << ' ' << p.y; }
+inline point operator-(const point& a, const point& b) { return point(a.x - b.x, a.y - b.y); }
+inline point operator+(const point& a, const point& b) { return point(a.x + b.x, a.y + b.y); }
+inline bool operator<(const point& a, const point& b) {
+    return a.y < b.y || (a.y == b.y && a.x < b.x);
+}
+
+int sgn(int v) { return (0 < v) - (v < 0); }
+point sgn(const point& p) { return point(sgn(p.x), sgn(p.y)); }
+
+map<char,point> direction = {{'U', point(-1,0)}, {'D', point(1,0)}, {'L', point(0,-1)}, {'R', point(0,1)}};
+
 int main(int argc, char *argv[]) {
-    set<pair<int,int>> seen;
-    array<pair<int,int>, SZ> rope;
-    rope.fill({15, 11});
+    array<point,SZ> rope;
+    set<point> seen{rope.back()};
 
     char dir;
     int dist;
     while (cin >> dir >> dist) {
-        int dy = dir == 'L' ? -1 : dir == 'R' ? 1 : 0,
-            dx = dir == 'U' ? -1 : dir == 'D' ? 1 : 0;
+        auto d = direction[dir];
         while (dist--) {
-            rope[0].first += dx;
-            rope[0].second += dy;
+            rope[0] += d;
             for (int i = 1; i < SZ; ++i) {
-                auto& [px, py] = rope[i-1];
-                auto& [x, y] = rope[i];
-                if (abs(px - x) + abs(py - y) > 2) {
-                    if (abs(px - x) == 1) x = px;
-                    else if (abs(py - y) == 1) y = py;
-                }
-                if (abs(px - x) > 1)
-                    x = (px + x) / 2;
-                if (abs(py - y) > 1)
-                    y = (py + y) / 2;
+                point diff = rope[i] - rope[i-1];
+                if (max(abs(diff.x), abs(diff.y)) > 1) 
+                    diff -= sgn(diff);
+                rope[i] = rope[i-1] + diff;
             }
             seen.insert(rope.back());
         }
     }
+
     cout << seen.size() << '\n';
     return 0;
 }
