@@ -2,22 +2,26 @@
 #include <bits/stdc++.h>
 #include "../lib/aoc.hpp"
 using namespace std;
+#define ll long long
+
+int mod = 1;
 
 struct monkey {
-    int id, next[2], div, cnt=0;
-    vector<int> items;
+    int id, next[2], div;
+    ll cnt = 0;
+    vector<ll> items;
     vector<string> op;
-    int do_op(int old) {
-        int a = op[0] == "old" ? old : stoi(op[0]),
-            b = op[2] == "old" ? old : stoi(op[2]);
+    ll do_op(ll old) {
+        ll a = op[0] == "old" ? old : stoi(op[0]),
+           b = op[2] == "old" ? old : stoi(op[2]);
         return op[1] == "+" ? a + b : a * b;
     }
-    vector<pair<int,int>> throw_items() {
+    vector<pair<int,ll>> throw_items() {
         const int n = items.size();
-        vector<pair<int,int>> res;
+        vector<pair<int,ll>> res;
         for (int i = 0; i < n; ++i) {
             ++cnt;
-            int v = do_op(items[i]) / 3;
+            ll v = do_op(items[i]) % mod;
             res.push_back({next[v % div != 0], v});
         }
         items.clear();
@@ -54,19 +58,23 @@ int main(int argc, char *argv[]) {
         string line;
         cin >> s >> s;
         getline(cin, line);
-        split(line, m.items, ", ");
+        vector<int> items;
+        split(line, items, ", ");
+        for (auto& x : items) 
+            m.items.push_back(x);
         getline(cin, line);
         vector<string> parts;
         split(line, parts);
         m.op = vector<string>(parts.end()-3, parts.end());
         m.div = read_num();
+        mod *= m.div;
         m.next[0] = read_num();
         m.next[1] = read_num();
         monks.push_back(m);
         getline(cin, line);
     }
 
-    for (int round = 1; round <= 20; ++round) 
+    for (int round = 1; round <= 10000; ++round) 
         for (auto& m : monks) 
             for (auto& [nxt, val] : m.throw_items()) 
                 monks[nxt].items.push_back(val);
