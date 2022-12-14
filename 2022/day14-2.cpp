@@ -4,7 +4,16 @@
 using namespace std;
 
 const int maxN = 700;
-const int startX = 500;
+const int shiftX = 200;
+const int startX = 300;
+array<int,2> ylim = {INT_MAX, 0}, xlim = {INT_MAX, 0};
+
+void update_lims(array<int,2>& p) {
+    ylim[0] = min(ylim[0], p[1]);
+    ylim[1] = max(ylim[1], p[1]);
+    xlim[0] = min(xlim[0], p[0]);
+    xlim[1] = max(xlim[1], p[0]);
+}
 
 vector<array<int,2>> to_points(string line) {
     vector<string> parts;
@@ -17,7 +26,9 @@ vector<array<int,2>> to_points(string line) {
             if (c == ',') ++j;
             else point[j] = 10*point[j] + (c-'0');
         }
+        point[0] -= shiftX;
         res.push_back(point);
+        update_lims(point);
     }
     return res;
 }
@@ -47,6 +58,9 @@ int main(int argc, char *argv[]) {
         }
         ++idx;
     }
+    // add floor at 2 + highest y-coord
+    for (int j = 0; j < maxN; ++j) 
+        g[ylim[1]+2][j] = '#';
 
     int res = 0;
     bool done = false;
@@ -70,8 +84,9 @@ int main(int argc, char *argv[]) {
     }
 
     // cout << endl;
-    // for (int i = 0; i < 20; ++i) {
-    //     for (int j = 470; j < 510; ++j) {
+    // cout << "ylim: " << ylim[0] << ":" << ylim[1] << '\n';
+    // for (int i = 0; i < 220; ++i) {
+    //     for (int j = startX; j < startX + 200; ++j) {
     //         cout << g[i][j];
     //     }
     //     cout << endl;

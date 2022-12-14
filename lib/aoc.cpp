@@ -37,12 +37,12 @@ void split(std::string& s, std::vector<int>& res, std::string delim) {
 
 void split(std::string& s, std::vector<std::string>& res, std::string delim) {
     res.clear();
-    size_t pos = 0;
+    size_t pos = 0, n = delim.size();
     std::string cur;
-    while ((pos = s.find(delim, pos)) != std::string::npos) {
+    while ((pos = s.find(delim)) != std::string::npos) {
         cur = s.substr(0, pos);
         res.push_back(trim(cur));
-        s.erase(0, pos + delim.size());
+        s.erase(0, pos + n);
     }
     if (s.size()) res.push_back(trim(s));
 }
@@ -71,6 +71,7 @@ std::string hex2bin(std::string& s) {
     return bits;
 }
 
+#ifdef USE_RE
 bool matches(std::string& line, std::vector<string>& res, std::string re) {
     res.clear();
     std::regex r(re);
@@ -82,3 +83,4 @@ bool matches(std::string& line, std::vector<string>& res, std::string re) {
     }
     return false;
 }
+#endif
