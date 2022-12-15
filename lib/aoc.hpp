@@ -11,6 +11,7 @@
 #endif 
 #include "tree.hpp"
 
+extern std::vector<int> read_ints(std::string s);
 extern std::string trim(std::string&);
 extern void split(std::string&, std::vector<std::string>&, char c = ' ');
 extern void split(std::string&, std::vector<int>&, char c = ' ');

@@ -1,5 +1,28 @@
 #include "aoc.hpp"
 
+std::vector<int> read_ints(std::string s) {
+    int n = s.size();
+    std::vector<int> res;
+    int v = 0, sgn = 1;
+    bool active = false;
+    for (int i = 0; i < n; ++i) {
+        if (s[i] == '-' && i < n-1 && isdigit(s[i+1])) {
+            active = true;
+            sgn = -1;
+        } else if (isdigit(s[i])) {
+            active = true;
+            v = 10*v + (s[i] - '0');
+        } else {
+            if (active) res.push_back(sgn * v);
+            v = 0;
+            sgn = 1;
+            active = false;
+        }
+    }
+    if (active) res.push_back(sgn * v);
+    return res;
+}
+
 std::string trim(std::string& s) {
     size_t i = 0, j = s.size()-1;
     while (i < s.size() && isspace(s[i])) ++i;
