@@ -41,15 +41,18 @@ int main(int argc, char *argv[]) {
         return {true, {i+x, j+y}};
     };
 
-    int idx = 0, nround = 10, sz = elves.size();
-    while (nround--) {
+    int idx = 0, nround = 0, sz = elves.size();
+    bool stable = false;
+    while (!stable) {
         set<pair<int,int>> nxt;
         map<pair<int,int>,vector<pair<int,int>>> proposed;
+        stable = true;
         for (auto& e : elves) {
             if (!should_move(e)) {
                 nxt.insert(e);
                 continue;
             }
+            stable = false;
             int d = idx, done = 0;
             do {
                 auto [ok, pos] = is_open(e, d);
@@ -69,26 +72,10 @@ int main(int argc, char *argv[]) {
         }
         idx = (idx + 1) % 4;
         swap(nxt, elves);
+        ++nround;
         assert((int)elves.size() == sz);
-
-        // cout << "== End of Round " << 10 - nround << " ==\n";
-        // vector<string> grid(15, string(15, '.'));
-        // for (auto& [x,y] : elves) 
-        //     grid[x+3][y+3] = '#';
-        // for (auto& r : grid) {
-        //     cout << r << '\n';
-        // }
-        // cout << '\n';
     }
 
-    int mx[2] = {INT_MAX,INT_MIN}, my[2] = {INT_MAX,INT_MIN};
-    for (auto& e : elves) {
-        mx[0] = min(mx[0], e.first);
-        mx[1] = max(mx[1], e.first);
-        my[0] = min(my[0], e.second);
-        my[1] = max(my[1], e.second);
-    }
-
-    cout << (1 + mx[1] - mx[0]) * (1 + my[1] - my[0]) - elves.size() << '\n';
+    cout << nround << '\n';
     return 0;
 }
