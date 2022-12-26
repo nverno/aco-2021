@@ -3,7 +3,7 @@
 #include "../lib/aoc.hpp"
 using namespace std;
 
-const int MINUTES = 24;
+const int MINUTES = 32;
 
 // 1:4 robots, 5:8 minerals
 using state = array<int,8>;
@@ -60,12 +60,13 @@ int bfs(vector<int>& costs) {
 
 int main(int argc, char *argv[]) {
     string line;
-    int res = 0;
+    int res = 1;
     while (getline(cin, line)) {
         vector<int> costs = read_ints(line);
+        if (costs[0] > 3) break;
         int best = bfs(costs);
         // cout << costs[0] << ": " << best << '\n';
-        res += costs[0] * bfs(costs);
+        res *= best;
     }
     cout << res << '\n';
     return 0;
