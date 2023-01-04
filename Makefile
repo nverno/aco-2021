@@ -33,6 +33,9 @@ all:
 in%: $(INPUT)/day%.txt
 	@make $(INPUT)/day$*.txt
 
+today:
+	@date +"https://adventofcode.com/%Y/day/%-d"
+
 $(INPUT)/day%.txt:
 	$(CURL) -Lo $@ $(ADVENT)/$(YEAR)/day/$*/input
 
