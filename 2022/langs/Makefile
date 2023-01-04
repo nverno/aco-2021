@@ -19,6 +19,10 @@ d3:
 	@./day3-1.lua < ${INPUT}/day3.txt
 	@./day3-2.lua < ${INPUT}/day3.txt
 
+d4:
+	@./day4-1.awk < ${INPUT}/day4.txt
+	@./day4-2.awk < ${INPUT}/day4.txt
+
 clean:
 	$(RM) -r core *~ *.o *.out *.exe 
 
