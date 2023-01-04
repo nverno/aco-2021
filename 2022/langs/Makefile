@@ -27,6 +27,10 @@ d5:
 	@./day5-1.pl < ${INPUT}/day5.txt
 	@./day5-2.pl < ${INPUT}/day5.txt
 
+d6:
+	@./day6-1.js < ${INPUT}/day6.txt
+	@./day6-2.js < ${INPUT}/day6.txt
+
 clean:
 	$(RM) -r core *~ *.o *.out *.exe 
 
