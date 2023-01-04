@@ -31,6 +31,13 @@ d6:
 	@./day6-1.js < ${INPUT}/day6.txt
 	@./day6-2.js < ${INPUT}/day6.txt
 
+%.out: %.c
+	gcc $^ -o $@
+
+d7: day7-1.out day7-2.out
+	@./day7-1.out < ${INPUT}/day7.txt
+	@./day7-2.out < ${INPUT}/day7.txt
+
 clean:
 	$(RM) -r core *~ *.o *.out *.exe 
 
