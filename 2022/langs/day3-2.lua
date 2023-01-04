@@ -1,4 +1,6 @@
 #!/usr/bin/env lua
+function isupper(ch) return string.upper(ch) == ch end
+
 function part2()
   local res = 0
   while true do
@@ -12,7 +14,7 @@ function part2()
     
     for ch,_ in pairs(a) do
       if b[ch] and c[ch] then
-        if string.upper(ch) == ch then
+        if isupper(ch) then
           res = res + 27 + (string.byte(ch) - string.byte('A'))
         else
           res = res + 1 + (string.byte(ch) - string.byte('a'))
