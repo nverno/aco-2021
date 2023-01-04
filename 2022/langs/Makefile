@@ -23,6 +23,10 @@ d4:
 	@./day4-1.awk < ${INPUT}/day4.txt
 	@./day4-2.awk < ${INPUT}/day4.txt
 
+d5:
+	@./day5-1.pl < ${INPUT}/day5.txt
+	@./day5-2.pl < ${INPUT}/day5.txt
+
 clean:
 	$(RM) -r core *~ *.o *.out *.exe 
 

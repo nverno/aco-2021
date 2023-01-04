@@ -19,19 +19,17 @@ while (my $line = <STDIN>) {
 for my $k (keys %stacks) {
   $stacks{$k} = reverse($stacks{$k});
 }
+# print "$_ => $stacks{$_}\n" for sort {$a <=> $b} keys %stacks;
 
-# print "$_ => $stacks{$_}\n"
-#   for sort {$a <=> $b} keys %stacks;
-
-while (my $line = <STDIN>) {
-  next unless $line =~ /move (\d+) from (\d+) to (\d+)/;
+while (<STDIN>) {
+  next unless $_ =~ /move (\d+) from (\d+) to (\d+)/;
   my $cnt = $1;
-  while ($cnt--) {
-    $stacks{$3-1} .= chop($stacks{$2-1});
-  }
+  my $str = substr $stacks{$2-1}, -$cnt;
+  $stacks{$3-1} .= $str;
+  $stacks{$2-1} = substr $stacks{$2-1}, 0, length($stacks{$2-1})-$cnt;
 }
 
-print 'Part 1: ';
+print 'Part 2: ';
 print substr($stacks{$_}, -1)
   for sort {$a <=> $b} keys %stacks;
 print "\n";
