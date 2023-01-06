@@ -38,6 +38,10 @@ d7: day7-1.out day7-2.out
 	@./day7-1.out < ${INPUT}/day7.txt
 	@./day7-2.out < ${INPUT}/day7.txt
 
+d8:
+	@./day8-1.m < ${INPUT}/day8.txt
+	@./day8-2.m < ${INPUT}/day8.txt
+
 clean:
 	$(RM) -r core *~ *.o *.out *.exe 
 
